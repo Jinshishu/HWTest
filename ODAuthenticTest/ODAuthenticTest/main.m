@@ -291,6 +291,131 @@ void AT6() {
     
 }
 
+#pragma mark - 二叉树的广度优先遍历
+typedef struct Tree {
+    NSString *data;
+    struct Tree *leftTree;
+    struct Tree *rightTree;
+} Node;
+
+NSString *str;
+Node *createNode(NSString *str1, NSString *str2) {
+    if (str1.length == 0) {
+        // 后序序列遍历结束
+        return NULL;
+    }
+    if (str2.length == 0) {
+        // 中序序列遍历结束
+        return NULL;
+    }
+    // 先从后序序列中取节点
+    NSString *val = [str1 substringWithRange:NSMakeRange(str1.length - 1, 1)];
+    str = [str1 substringWithRange:NSMakeRange(0, str1.length - 1)];
+    // 从中序序列中找到该节点的左右子树中序列
+    NSRange range = [str2 rangeOfString:val];
+    NSString *left, *right;
+    if (range.length == 0) {
+        left = @"";
+        right = @"";
+    } else {
+        left = [str2 substringToIndex:range.location];
+        right = [str2 substringFromIndex:range.location + 1];
+    }
+    
+    // 递归生成节点
+    Node *nd = (Node *)malloc(sizeof(Node));
+    nd->data = val;
+    nd->rightTree = createNode(str, right);
+    nd->leftTree = createNode(str, left);
+    return nd;
+}
+
+// 先序遍历 dlr
+void preorderTraversal(Node *nd) {
+    if (nd == NULL) {
+        return;
+    }
+    printf("%s", nd->data.UTF8String);
+    if (nd->leftTree) {
+        preorderTraversal(nd->leftTree);
+    }
+    if (nd->rightTree) {
+        preorderTraversal(nd->rightTree);
+    }
+}
+
+// 中序遍历 ldr
+void inorderTraversal(Node *nd) {
+    if (nd == NULL) {
+        return;
+    }
+    if (nd->leftTree) {
+        inorderTraversal(nd->leftTree);
+    }
+    printf("%s", nd->data.UTF8String);
+    if (nd->rightTree) {
+        inorderTraversal(nd->rightTree);
+    }
+}
+
+// 后序遍历 lrd
+void postorderTransversa(Node *nd) {
+    if (nd == NULL) {
+        return;
+    }
+    if (nd->leftTree) {
+        postorderTransversa(nd->leftTree);
+    }
+    if (nd->rightTree) {
+        postorderTransversa(nd->rightTree);
+    }
+    printf("%s", nd->data.UTF8String);
+}
+
+// 层次遍历
+void levelOrderTraverl(Node *nd) {
+    if (nd == NULL) {
+        return;
+    }
+    // 申请临时数组 保存下一个节点
+    Node **nodes = (Node **)calloc(10000, sizeof(Node *));
+    nodes[0] = nd;
+    int pre = 0;
+    int pos = 1;
+    while (pos > pre) {
+        int num = pos - pre;
+        for (int i = 0; i < num; i++) {
+            printf("%s", nodes[i + pre]->data.UTF8String);
+            if (nodes[i + pre]->leftTree != NULL) {
+                nodes[pos++] = nodes[i + pre]->leftTree;
+            }
+            if (nodes[i + pre]->rightTree != NULL) {
+                nodes[pos++] = nodes[i + pre]->rightTree;
+            }
+        }
+        pre += num;
+    }
+    free(nodes);
+}
+
+//CBEFDA CBAEDF===>ABDCEF
+void AT9() {
+    char str1[26], str2[26];
+    scanf("%s %s", str1, str2);
+    NSString *backStr = [NSString stringWithFormat:@"%s", str1];
+    NSString *midStr = [NSString stringWithFormat:@"%s", str2];
+    
+    Node *tree = createNode(backStr, midStr);
+    levelOrderTraverl(tree);
+    printf("\n");
+    preorderTraversal(tree);
+    printf("\n");
+    inorderTraversal(tree);
+    printf("\n");
+    postorderTransversa(tree);
+    
+}
+
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
 //        AT1();
@@ -303,7 +428,9 @@ int main(int argc, const char * argv[]) {
         
 //        AT5();
         
-        AT6();
+//        AT6();
+        
+        AT9();
     }
     return 0;
 }
