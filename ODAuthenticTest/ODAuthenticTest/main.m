@@ -7,6 +7,73 @@
 
 #import <Foundation/Foundation.h>
 
+#pragma mark - 工厂流水线最短时间
+//3 5
+//8 4 3 2 10
+void AT21() {
+    // 第一题
+//5
+//2
+//2 4
+//1
+//10
+//3
+//2 4 7
+//1
+    
+    int N,M;
+    scanf("%d", &N);
+    scanf("%d\n", &M);
+    char str[1000000];
+    gets(str);
+    NSString *ocStr = [NSString stringWithFormat:@"%s", str];
+    NSArray *dearArr = [ocStr componentsSeparatedByString:@" "];
+    int k;
+    scanf("%d", &k);
+    
+    NSMutableArray *liveArr = [NSMutableArray array];
+    for (int i = 0; i < N; i++) {
+        [liveArr addObject:@(1)];
+    }
+    
+    for (int j = 0; j < dearArr.count; j++) {
+        int dn = [[dearArr objectAtIndex:j] intValue];
+        [liveArr replaceObjectAtIndex:dn - 1 withObject:@(0)];
+    }
+    
+    int l = 0, r = 0, res = 0;
+    for (r = 0; r < N; r++) {
+        int nr = [[liveArr objectAtIndex:r] intValue];
+        k -= 1 - nr;
+        while (k < 0) {
+            int nl = [[liveArr objectAtIndex:l] intValue];
+            k += 1 - nl;
+            l += 1;
+        }
+        res = MAX(res, r - l + 1);
+    }
+    printf("%d", res);
+    
+//    int m,n;
+//    scanf("%d %d\n", &m, &n);
+//    char str[10000];
+//    gets(str);
+//    NSString *ocStr = [NSString stringWithFormat:@"%s", str];
+//    NSArray *array = [ocStr componentsSeparatedByString:@" "];
+//    array = [array sortedArrayUsingSelector:@selector(compare:)];
+//
+//    NSMutableArray *resArr = [NSMutableArray arrayWithCapacity:m];
+////    int tmp = 0;
+//    for (int i = 0; i < n; i++) {
+////        int nn = [[array objectAtIndex:i] intValue];
+////        tmp += nn;
+////        [resArr insertObject:@(tmp) atIndex:i % m];
+//        resArr[i % m] = @([resArr[i % m] intValue] + [array[i] intValue]);
+//    }
+//    NSArray *rArr = [resArr sortedArrayUsingSelector:@selector(compare:)];
+//    printf("%s", [[rArr objectAtIndex:m - 1] stringValue].UTF8String);
+}
+
 #pragma mark - 非严格递增连续数字序列
 void AT1() {
     // abc2234019A334bc aaaaaa44ko543j123j7345677781 aaaaa34567778a44ko543j123j71  345678a44ko543j123j7134567778aa
@@ -765,7 +832,9 @@ int main(int argc, const char * argv[]) {
         
 //        AT18();
         
-        AT20();
+//        AT20();
+        
+        AT21();
     }
     return 0;
 }
