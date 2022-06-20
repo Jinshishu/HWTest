@@ -11,6 +11,61 @@
 //3 5
 //8 4 3 2 10
 void AT21() {
+    // 第二题
+    int m,n;
+    scanf("%d %d\n", &m, &n);
+    char str[10000];
+    gets(str);
+    NSString *ocStr = [NSString stringWithFormat:@"%s", str];
+    NSMutableArray *array = [ocStr componentsSeparatedByString:@" "].mutableCopy;
+    for (int i = 0; i < array.count; i++) {
+        for (int j = 0; j < array.count - 1; j++) {
+            int a = [[array objectAtIndex:j] intValue];
+            int b = [[array objectAtIndex:j + 1] intValue];
+            if (a > b) {
+                [array exchangeObjectAtIndex:j withObjectAtIndex:j + 1];
+            }
+        }
+    }
+    int total = 0;
+    for (int i = 0; i < array.count; i++) {
+        total += [[array objectAtIndex:i] intValue];
+    }
+    
+    if (n <= m) {
+        printf("%s", [[array lastObject] UTF8String]);
+        return;
+    }
+    
+    // 流水线数量m<作业数n
+    NSMutableArray *resArr = [NSMutableArray array];
+    for (int i = 0; i < m; i++) {
+        [resArr addObject:@(0)];
+    }
+    int flag = 0;
+    int index = 0;
+    for (int i = 0; i < m; ) {
+        // 将任务分配到流水线
+        flag += [array[index] intValue];
+        resArr[i] = [@([resArr[i] intValue] + [array[index] intValue]) stringValue];
+        if (flag == total) {
+            break;
+        }
+        index++;
+        i = (i + 1) % m;
+    }
+    for (int i = 0; i < resArr.count; i++) {
+        for (int j = 0; j < resArr.count - 1; j++) {
+            int a = [[resArr objectAtIndex:j] intValue];
+            int b = [[resArr objectAtIndex:j + 1] intValue];
+            if (a > b) {
+                [resArr exchangeObjectAtIndex:j withObjectAtIndex:j + 1];
+            }
+        }
+    }
+    printf("%s", [[resArr lastObject] UTF8String]);
+    
+    return;
     // 第一题
 //5
 //2
@@ -21,57 +76,40 @@ void AT21() {
 //2 4 7
 //1
     
-    int N,M;
-    scanf("%d", &N);
-    scanf("%d\n", &M);
-    char str[1000000];
-    gets(str);
-    NSString *ocStr = [NSString stringWithFormat:@"%s", str];
-    NSArray *dearArr = [ocStr componentsSeparatedByString:@" "];
-    int k;
-    scanf("%d", &k);
-    
-    NSMutableArray *liveArr = [NSMutableArray array];
-    for (int i = 0; i < N; i++) {
-        [liveArr addObject:@(1)];
-    }
-    
-    for (int j = 0; j < dearArr.count; j++) {
-        int dn = [[dearArr objectAtIndex:j] intValue];
-        [liveArr replaceObjectAtIndex:dn - 1 withObject:@(0)];
-    }
-    
-    int l = 0, r = 0, res = 0;
-    for (r = 0; r < N; r++) {
-        int nr = [[liveArr objectAtIndex:r] intValue];
-        k -= 1 - nr;
-        while (k < 0) {
-            int nl = [[liveArr objectAtIndex:l] intValue];
-            k += 1 - nl;
-            l += 1;
-        }
-        res = MAX(res, r - l + 1);
-    }
-    printf("%d", res);
-    
-//    int m,n;
-//    scanf("%d %d\n", &m, &n);
-//    char str[10000];
+//    int N,M;
+//    scanf("%d", &N);
+//    scanf("%d\n", &M);
+//    char str[1000000];
 //    gets(str);
 //    NSString *ocStr = [NSString stringWithFormat:@"%s", str];
-//    NSArray *array = [ocStr componentsSeparatedByString:@" "];
-//    array = [array sortedArrayUsingSelector:@selector(compare:)];
+//    NSArray *dearArr = [ocStr componentsSeparatedByString:@" "];
+//    int k;
+//    scanf("%d", &k);
 //
-//    NSMutableArray *resArr = [NSMutableArray arrayWithCapacity:m];
-////    int tmp = 0;
-//    for (int i = 0; i < n; i++) {
-////        int nn = [[array objectAtIndex:i] intValue];
-////        tmp += nn;
-////        [resArr insertObject:@(tmp) atIndex:i % m];
-//        resArr[i % m] = @([resArr[i % m] intValue] + [array[i] intValue]);
+//    NSMutableArray *liveArr = [NSMutableArray array];
+//    for (int i = 0; i < N; i++) {
+//        [liveArr addObject:@(1)];
 //    }
-//    NSArray *rArr = [resArr sortedArrayUsingSelector:@selector(compare:)];
-//    printf("%s", [[rArr objectAtIndex:m - 1] stringValue].UTF8String);
+//
+//    for (int j = 0; j < dearArr.count; j++) {
+//        int dn = [[dearArr objectAtIndex:j] intValue];
+//        [liveArr replaceObjectAtIndex:dn - 1 withObject:@(0)];
+//    }
+//
+//    int l = 0, r = 0, res = 0;
+//    for (r = 0; r < N; r++) {
+//        int nr = [[liveArr objectAtIndex:r] intValue];
+//        k -= 1 - nr;
+//        while (k < 0) {
+//            int nl = [[liveArr objectAtIndex:l] intValue];
+//            k += 1 - nl;
+//            l += 1;
+//        }
+//        res = MAX(res, r - l + 1);
+//    }
+//    printf("%d", res);
+    
+
 }
 
 #pragma mark - 非严格递增连续数字序列
