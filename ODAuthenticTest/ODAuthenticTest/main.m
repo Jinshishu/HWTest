@@ -11,36 +11,89 @@
 //3 5
 //8 4 3 2 10
 void AT21() {
-    // 玩牌高手
-    char str[200];
+    //数组二叉树
+    char str[2000];
     gets(str);
     NSString *ocStr = [NSString stringWithFormat:@"%s", str];
-    NSArray *numArr = [ocStr componentsSeparatedByString:@","];
-    int sum = 0;
-    NSMutableArray *scoArr = [NSMutableArray array];
-    for (int i = 0; i < numArr.count; i++) {
-        int num = [[numArr objectAtIndex:i] intValue];
-        if (i < 3) {
-            if (num <= 0) {
-                [scoArr addObject:@(0)];
-            } else {
-                [scoArr addObject:@(sum + num)];
+    NSMutableArray *numArr = [ocStr componentsSeparatedByString:@" "].mutableCopy;
+    [numArr insertObject:@"0" atIndex:0];
+    
+    int min = 0x0fffffff;
+    int min_idx = 0;
+    for (int i = 1; i < numArr.count; i++) {
+        if (2 * i + 1 < numArr.count) {
+            int i1 = [[numArr objectAtIndex:i] intValue];
+            int i2 = [[numArr objectAtIndex:2 * i] intValue];
+            int i3 = [[numArr objectAtIndex:2 * i + 1] intValue];
+            if (i1 != -1 && i2 == -1 && i3 == -1) {
+                if (i1 < min) {
+                    min = i1;
+                    min_idx = i;
+                }
             }
-        } else {
-            if (num > 0) {
-                [scoArr addObject:@(sum + num)];
-            } else {
-                int tSco = [[scoArr objectAtIndex:i - 3] intValue];
-                int nn = sum + num;
-                int max = MAX(tSco, nn);
-                [scoArr addObject:@(max)];
+        } else if (2 * i + 1 > numArr.count) {
+            int i1 = [[numArr objectAtIndex:i] intValue];
+            if (i1 != -1) {
+                if (i1 < min) {
+                    min = i1;
+                    min_idx = i;
+                }
             }
         }
-        sum = [[scoArr objectAtIndex:i] intValue];
     }
-    int score = [[scoArr lastObject] intValue];
-    printf("%d", score);
+    int idx = 0;
+    NSMutableArray *tarArr = [NSMutableArray array];
+    while (min_idx != 0) {
+        NSString *str = [numArr objectAtIndex:min_idx];
+        [tarArr addObject:str];
+        idx++;
+        min_idx /= 2;
+    }
+    for (int j = idx - 1; j >= 0; j--) {
+        printf("%s ", [[tarArr objectAtIndex:j] UTF8String]);
+    }
+    
+    
     // 水仙花
+    
+    
+    
+    
+    
+    
+    
+    
+//    // 玩牌高手
+//    char str[200];
+//    gets(str);
+//    NSString *ocStr = [NSString stringWithFormat:@"%s", str];
+//    NSArray *numArr = [ocStr componentsSeparatedByString:@","];
+//    int sum = 0;
+//    NSMutableArray *scoArr = [NSMutableArray array];
+//    for (int i = 0; i < numArr.count; i++) {
+//        int num = [[numArr objectAtIndex:i] intValue];
+//        if (i < 3) {
+//            if (num <= 0) {
+//                [scoArr addObject:@(0)];
+//            } else {
+//                [scoArr addObject:@(sum + num)];
+//            }
+//        } else {
+//            if (num > 0) {
+//                [scoArr addObject:@(sum + num)];
+//            } else {
+//                int tSco = [[scoArr objectAtIndex:i - 3] intValue];
+//                int nn = sum + num;
+//                int max = MAX(tSco, nn);
+//                [scoArr addObject:@(max)];
+//            }
+//        }
+//        sum = [[scoArr objectAtIndex:i] intValue];
+//    }
+//    int score = [[scoArr lastObject] intValue];
+//    printf("%d", score);
+    
+    
     
     
     return;
