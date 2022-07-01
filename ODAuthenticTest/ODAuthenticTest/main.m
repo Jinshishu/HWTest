@@ -11,61 +11,106 @@
 //3 5
 //8 4 3 2 10
 void AT21() {
-    // 第二题
-    int m,n;
-    scanf("%d %d\n", &m, &n);
-    char str[10000];
+    // 玩牌高手
+    char str[200];
     gets(str);
     NSString *ocStr = [NSString stringWithFormat:@"%s", str];
-    NSMutableArray *array = [ocStr componentsSeparatedByString:@" "].mutableCopy;
-    for (int i = 0; i < array.count; i++) {
-        for (int j = 0; j < array.count - 1; j++) {
-            int a = [[array objectAtIndex:j] intValue];
-            int b = [[array objectAtIndex:j + 1] intValue];
-            if (a > b) {
-                [array exchangeObjectAtIndex:j withObjectAtIndex:j + 1];
+    NSArray *numArr = [ocStr componentsSeparatedByString:@","];
+    int sum = 0;
+    NSMutableArray *scoArr = [NSMutableArray array];
+    for (int i = 0; i < numArr.count; i++) {
+        int num = [[numArr objectAtIndex:i] intValue];
+        if (i < 3) {
+            if (num <= 0) {
+                [scoArr addObject:@(0)];
+            } else {
+                [scoArr addObject:@(sum + num)];
+            }
+        } else {
+            if (num > 0) {
+                [scoArr addObject:@(sum + num)];
+            } else {
+                int tSco = [[scoArr objectAtIndex:i - 3] intValue];
+                int nn = sum + num;
+                int max = MAX(tSco, nn);
+                [scoArr addObject:@(max)];
             }
         }
+        sum = [[scoArr objectAtIndex:i] intValue];
     }
-    int total = 0;
-    for (int i = 0; i < array.count; i++) {
-        total += [[array objectAtIndex:i] intValue];
-    }
+    int score = [[scoArr lastObject] intValue];
+    printf("%d", score);
+    // 水仙花
     
-    if (n <= m) {
-        printf("%s", [[array lastObject] UTF8String]);
-        return;
-    }
-    
-    // 流水线数量m<作业数n
-    NSMutableArray *resArr = [NSMutableArray array];
-    for (int i = 0; i < m; i++) {
-        [resArr addObject:@(0)];
-    }
-    int flag = 0;
-    int index = 0;
-    for (int i = 0; i < m; ) {
-        // 将任务分配到流水线
-        flag += [array[index] intValue];
-        resArr[i] = [@([resArr[i] intValue] + [array[index] intValue]) stringValue];
-        if (flag == total) {
-            break;
-        }
-        index++;
-        i = (i + 1) % m;
-    }
-    for (int i = 0; i < resArr.count; i++) {
-        for (int j = 0; j < resArr.count - 1; j++) {
-            int a = [[resArr objectAtIndex:j] intValue];
-            int b = [[resArr objectAtIndex:j + 1] intValue];
-            if (a > b) {
-                [resArr exchangeObjectAtIndex:j withObjectAtIndex:j + 1];
-            }
-        }
-    }
-    printf("%s", [[resArr lastObject] UTF8String]);
     
     return;
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+//
+//    // 第二题
+//    int m,n;
+//    scanf("%d %d\n", &m, &n);
+//    char str[10000];
+//    gets(str);
+//    NSString *ocStr = [NSString stringWithFormat:@"%s", str];
+//    NSMutableArray *array = [ocStr componentsSeparatedByString:@" "].mutableCopy;
+//    for (int i = 0; i < array.count; i++) {
+//        for (int j = 0; j < array.count - 1; j++) {
+//            int a = [[array objectAtIndex:j] intValue];
+//            int b = [[array objectAtIndex:j + 1] intValue];
+//            if (a > b) {
+//                [array exchangeObjectAtIndex:j withObjectAtIndex:j + 1];
+//            }
+//        }
+//    }
+//    int total = 0;
+//    for (int i = 0; i < array.count; i++) {
+//        total += [[array objectAtIndex:i] intValue];
+//    }
+//
+//    if (n <= m) {
+//        printf("%s", [[array lastObject] UTF8String]);
+//        return;
+//    }
+//
+//    // 流水线数量m<作业数n
+//    NSMutableArray *resArr = [NSMutableArray array];
+//    for (int i = 0; i < m; i++) {
+//        [resArr addObject:@(0)];
+//    }
+//    int flag = 0;
+//    int index = 0;
+//    for (int i = 0; i < m; ) {
+//        // 将任务分配到流水线
+//        flag += [array[index] intValue];
+//        resArr[i] = [@([resArr[i] intValue] + [array[index] intValue]) stringValue];
+//        if (flag == total) {
+//            break;
+//        }
+//        index++;
+//        i = (i + 1) % m;
+//    }
+//    for (int i = 0; i < resArr.count; i++) {
+//        for (int j = 0; j < resArr.count - 1; j++) {
+//            int a = [[resArr objectAtIndex:j] intValue];
+//            int b = [[resArr objectAtIndex:j + 1] intValue];
+//            if (a > b) {
+//                [resArr exchangeObjectAtIndex:j withObjectAtIndex:j + 1];
+//            }
+//        }
+//    }
+//    printf("%s", [[resArr lastObject] UTF8String]);
+//
+//    return;
     // 第一题
 //5
 //2
@@ -606,13 +651,17 @@ void AT12() {
 void AT13() {
     int x, y;
     scanf("%d %d", &x, &y);
+    // 26个人  1字母+1数字
     if (x <= 26) {
         printf("1");
         return;
     }
     int del = 1;
-    for (int i = 0; i < y; i++) {
-        del *= 26;
+    for (int i = 0; i < 1; i++) {
+//        del *= 26;
+        // 一个字母 + y个数字
+        // del = 1 * 26;
+        del = del * 26;
     }
     int r = 1;
     del *= 10;
