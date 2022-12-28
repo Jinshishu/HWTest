@@ -7,61 +7,159 @@
 
 #import <Foundation/Foundation.h>
 
-#pragma mark - 工厂流水线最短时间
-//3 5
-//8 4 3 2 10
-void AT21() {
-    //数组二叉树
-    char str[2000];
-    gets(str);
-    NSString *ocStr = [NSString stringWithFormat:@"%s", str];
-    NSMutableArray *numArr = [ocStr componentsSeparatedByString:@" "].mutableCopy;
-    [numArr insertObject:@"0" atIndex:0];
+#pragma mark - 看这个写答案
+BOOL canPartitionKSubsets(NSArray *arr, int k, int all) {
+    if (all % k != 0) {
+        return NO;
+    }
     
-    int min = 0x0fffffff;
-    int min_idx = 0;
-    for (int i = 1; i < numArr.count; i++) {
-        if (2 * i + 1 < numArr.count) {
-            int i1 = [[numArr objectAtIndex:i] intValue];
-            int i2 = [[numArr objectAtIndex:2 * i] intValue];
-            int i3 = [[numArr objectAtIndex:2 * i + 1] intValue];
-            if (i1 != -1 && i2 == -1 && i3 == -1) {
-                if (i1 < min) {
-                    min = i1;
-                    min_idx = i;
-                }
+    int per = all / k;
+    // 升序
+    NSArray *nums = [arr sortedArrayUsingSelector:@selector(compare:)];
+    int n = nums.count;
+    
+    int a = [[nums objectAtIndex:n-1] intValue];
+    if (a > per) {
+        return NO;
+    }
+    
+    NSMutableArray *dp = [NSMutableArray array];
+    NSMutableArray *curSum = [NSMutableArray array];
+    
+    for(int i = 0; i < 1 << n; i++) {
+        [dp addObject:@(0)];
+        [curSum addObject:@(0)];
+    }
+    [dp replaceObjectAtIndex:0 withObject:@(1)];
+    
+    for(int i = 0; i < 1 << n; i++) {
+        BOOL flag = [[dp objectAtIndex:i] boolValue];
+        if (!flag) {
+            continue;
+        }
+        for(int j = 0; j < n; j++) {
+            int kc = [[curSum objectAtIndex:i] intValue];
+            int kn = [[nums objectAtIndex:j] intValue];
+            if (kc + kn > per) {
+                break;
             }
-        } else if (2 * i + 1 > numArr.count) {
-            int i1 = [[numArr objectAtIndex:i] intValue];
-            if (i1 != -1) {
-                if (i1 < min) {
-                    min = i1;
-                    min_idx = i;
+            if (((i >> j) & 1) == 0) {
+                int next = i | (1 << j);
+                
+                BOOL aa = [[dp objectAtIndex:next] boolValue];
+                if (!aa) {
+                    [curSum replaceObjectAtIndex:next withObject:@((kc + kn) % per)];
+                    [dp replaceObjectAtIndex:next withObject:@(1)];
                 }
             }
         }
     }
-    int idx = 0;
-    NSMutableArray *tarArr = [NSMutableArray array];
-    while (min_idx != 0) {
-        NSString *str = [numArr objectAtIndex:min_idx];
-        [tarArr addObject:str];
-        idx++;
-        min_idx /= 2;
-    }
-    for (int j = idx - 1; j >= 0; j--) {
-        printf("%s ", [[tarArr objectAtIndex:j] UTF8String]);
+    return [[dp objectAtIndex:(1 << n) -1] boolValue];
+}
+//9
+//5 2 1 5 2 1 5 2 1
+void AT22() {
+    int vid = 9;
+//    scanf("%d", &vid);
+//    char str[5000];
+//    gets(str);
+//    NSString *ocs = [NSString stringWithFormat:@"%s", str];
+//    NSArray *array = [ocs componentsSeparatedByString:@" "];
+    NSArray *array = @[@5, @2, @1, @5, @2, @1, @5, @2, @1];
+    NSMutableArray *nums = [NSMutableArray array];
+    int sum = 0;
+    for (int i = 0; i < vid; i++) {
+        int ss = [[array objectAtIndex:i] intValue];
+        [nums addObject:@(ss)];
+        sum += ss;
     }
     
-    
+    for (int i = vid; i > 0; i--) {
+        if (canPartitionKSubsets(nums, i, sum)) {
+            printf("%d", sum / i);
+            break;
+        }
+    }
+}
+
+
+#pragma mark - 工厂流水线最短时间
+//3 5
+//8 4 3 2 10
+
+//void test(NSString *str, NSMutableArray *array, int idx) {
+//    int sum = 0;
+//    NSMutableArray *strArr = [NSMutableArray array];
+//    for (int j = idx; j < str.length; j++) {
+//        int ascS = [str characterAtIndex:j];
+//        sum += ascS;
+//        if ([array containsObject:@(sum)]) {
+//            [strArr addObject:[str substringWithRange:NSMakeRange(<#NSUInteger loc#>, <#NSUInteger len#>)]];
+//            test(str, array, idx);
+//        }
+//    }
+//}
+
+void AT21() {
     // 水仙花
+    char str[200];
+    gets(str);
+    NSString *ocStr = [NSString stringWithFormat:@"%s", str];
+    
+    NSMutableArray *tNumArr = [NSMutableArray array];
+    for (int i = 100; i < 1000; i++) {
+        NSString *str = [@(i) stringValue];
+        int a = [[str substringWithRange:NSMakeRange(0, 1)] intValue];
+        int b = [[str substringWithRange:NSMakeRange(1, 1)] intValue];
+        int c = [[str substringWithRange:NSMakeRange(2, 1)] intValue];
+        if (pow(a, 3) + pow(b, 3) + pow(c, 3) == i) {
+            [tNumArr addObject:@(i)];
+        }
+    }
     
     
     
-    
-    
-    
-    
+//    //数组二叉树
+//    char str[2000];
+//    gets(str);
+//    NSString *ocStr = [NSString stringWithFormat:@"%s", str];
+//    NSMutableArray *numArr = [ocStr componentsSeparatedByString:@" "].mutableCopy;
+//    [numArr insertObject:@"0" atIndex:0];
+//
+//    int min = 0x0fffffff;
+//    int min_idx = 0;
+//    for (int i = 1; i < numArr.count; i++) {
+//        if (2 * i + 1 < numArr.count) {
+//            int i1 = [[numArr objectAtIndex:i] intValue];
+//            int i2 = [[numArr objectAtIndex:2 * i] intValue];
+//            int i3 = [[numArr objectAtIndex:2 * i + 1] intValue];
+//            if (i1 != -1 && i2 == -1 && i3 == -1) {
+//                if (i1 < min) {
+//                    min = i1;
+//                    min_idx = i;
+//                }
+//            }
+//        } else if (2 * i + 1 > numArr.count) {
+//            int i1 = [[numArr objectAtIndex:i] intValue];
+//            if (i1 != -1) {
+//                if (i1 < min) {
+//                    min = i1;
+//                    min_idx = i;
+//                }
+//            }
+//        }
+//    }
+//    int idx = 0;
+//    NSMutableArray *tarArr = [NSMutableArray array];
+//    while (min_idx != 0) {
+//        NSString *str = [numArr objectAtIndex:min_idx];
+//        [tarArr addObject:str];
+//        idx++;
+//        min_idx /= 2;
+//    }
+//    for (int j = idx - 1; j >= 0; j--) {
+//        printf("%s ", [[tarArr objectAtIndex:j] UTF8String]);
+//    }
     
 //    // 玩牌高手
 //    char str[200];
@@ -962,7 +1060,7 @@ int main(int argc, const char * argv[]) {
         
 //        AT13();
         
-        AT14();
+//        AT14();
         
 //        AT15();
         
@@ -974,7 +1072,9 @@ int main(int argc, const char * argv[]) {
         
 //        AT20();
         
-        AT21();
+//        AT21();
+        
+        AT22();
     }
     return 0;
 }
